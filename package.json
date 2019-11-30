@@ -1,0 +1,16 @@
+{
+  "name": "gazillionth-queue",
+  "version": "0.1.1",
+  "description": "One in gazillions of queue implementations",
+  "main": "gazillionth-queue.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sovpro/gazillionth-queue.git"
+  },
+  "keywords": ["queue", "async", "concurrency"],
+  "author": "sovpro <its.so@outlook.com>",
+  "license": "MIT"
+}
