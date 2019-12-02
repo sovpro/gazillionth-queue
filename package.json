@@ -1,6 +1,6 @@
 {
   "name": "gazillionth-queue",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "One in gazillions of queue implementations",
   "main": "gazillionth-queue.js",
   "scripts": {
