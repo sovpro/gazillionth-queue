@@ -16,8 +16,8 @@ const queue = new GazillionthQueue ({
 
 ## Add to queue 
 
-Functions in to the queue are invoked with a single callback 
-that should be invoked with the function has completed its work.
+Functions in the queue are executed with a callback argument
+that should be invoked once the function has completed its work.
 
 There are two methods to add a function to the queue: 
 
