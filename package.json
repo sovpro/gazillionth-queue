@@ -1,10 +1,10 @@
 {
   "name": "gazillionth-queue",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "One in gazillions of queue implementations",
   "main": "gazillionth-queue.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "istanbul cover test.js"
   },
   "repository": {
     "type": "git",
@@ -12,5 +12,8 @@
   },
   "keywords": ["queue", "async", "concurrency"],
   "author": "sovpro <its.so@outlook.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "istanbul": "^0.4.5"
+  }
 }
