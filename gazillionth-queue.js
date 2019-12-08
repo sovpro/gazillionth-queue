@@ -94,13 +94,13 @@ class GazillionthQueue extends EventEmitter {
   }
 
   push (fn) {
-    this[start_sym] ()
     this[tasks_sym].push (fn)
+    this[start_sym] ()
   }
 
   unshift (fn) {
-    this[start_sym] ()
     this[tasks_sym].unshift (fn)
+    this[start_sym] ()
   }
 
   [taskify_sym] (fn) {

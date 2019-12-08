@@ -3,7 +3,29 @@ const {GazillionthQueue} = require ('./gazillionth-queue')
 
 testBasics (2)
   .then (() => testBasics (1))
+  .then (() => testSingle (1))
   .then (() => console.log ('Done'))
+
+function testSingle (concurrency) {
+  console.log ('Test single item queue')
+
+  const queue = new GazillionthQueue ({concurrency})
+
+  const singleTask = new Promise ((fulfill) => {
+    const timer = setTimeout (() => {
+      throw new Error ('Single task not invoked')
+    }, 300)
+
+    queue.once ('done', () => fulfill ())
+
+    queue.push ((done) => {
+     clearTimeout (timer);
+     done ()
+    })
+  })
+
+  return singleTask
+}
 
 function testBasics (concurrency) {
   console.log (`Test basics with concurreny at ${concurrency}`)
