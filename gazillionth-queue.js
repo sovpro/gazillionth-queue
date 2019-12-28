@@ -41,12 +41,12 @@ class GazillionthQueue extends EventEmitter {
     , active_wait = 16
   } = {}) {
     super ()
-    this.concurrency       = concurrency
-    this.active_wait       = active_wait
+    this[run_sym]          = this[run_sym].bind (this)
     this[tasks_sym]        = []
     this[active_sym]       = 0
     this[started_sym]      = false
-    this[run_sym]          = this[run_sym].bind (this)
+    this.concurrency       = concurrency
+    this.active_wait       = active_wait
     this[start_sym] ()
   }
 
@@ -98,7 +98,7 @@ class GazillionthQueue extends EventEmitter {
   }
 
   set active_wait (value) {
-    this[wait_sym] = Math.min (0, value)
+    this[wait_sym] = Math.max (0, value)
   }
 
   get active () {
