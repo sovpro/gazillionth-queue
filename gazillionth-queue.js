@@ -14,14 +14,12 @@ const run_sym          = Symbol ()
 const start_sym        = Symbol ()
 const set_timer_sym    = Symbol ()
 const end_sym          = Symbol ()
+const wait_sym         = Symbol ()
 
-const TIMING = 16
-
-function queueTaskCallback (tracker, error) {
+function queueTaskCallback (tracker) {
+  if (tracker.invoked) return
   tracker.invoked = true
   this[active_sym] -= 1
-  if (error)
-    this.emit ('error', error)
 }
 
 function queueTask (fn) {
@@ -31,16 +29,20 @@ function queueTask (fn) {
     fn (callback)
   }
   catch (error) {
-    if (tracker.invoked === false)
-      callback (error)
+    callback (error)
+    this.emit ('error', error)
   }
 }
 
 class GazillionthQueue extends EventEmitter {
 
-  constructor ({concurrency}) {
+  constructor ({
+      concurrency = 1
+    , active_wait = 16
+  } = {}) {
     super ()
-    this[concurrency_sym]  = concurrency
+    this.concurrency       = concurrency
+    this.active_wait       = active_wait
     this[tasks_sym]        = []
     this[active_sym]       = 0
     this[started_sym]      = false
@@ -58,8 +60,8 @@ class GazillionthQueue extends EventEmitter {
 
   [end_sym] () {
     if (this.started === false ||
-        this.length ||
-        this.active) return false
+        this.length > 0 ||
+        this.active > 0) return false
 
     clearTimeout (this[timer_sym])
     this[started_sym] = false
@@ -74,11 +76,29 @@ class GazillionthQueue extends EventEmitter {
   }
 
   [set_timer_sym] () {
-    this[timer_sym] = setTimeout (this[run_sym], TIMING)
+    this[timer_sym] = setTimeout (this[run_sym], this.active_wait)
   }
 
   get concurrency () {
     return this[concurrency_sym]
+  }
+
+  set concurrency (value) {
+    const new_value = Math.max (0, value)
+    const old_value = this[concurrency_sym]
+    this[concurrency_sym] = new_value
+    if (this.started &&
+        new_value > old_value) {
+      this[set_timer_sym] ()
+    }
+  }
+
+  get active_wait () {
+    return this[wait_sym]
+  }
+
+  set active_wait (value) {
+    this[wait_sym] = Math.min (0, value)
   }
 
   get active () {
