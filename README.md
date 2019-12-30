@@ -2,7 +2,7 @@
 
 One in gazillions of queue implementations. 
 
-[![Build status for Node.js 8 10 12](https://github.com/sovpro/gazillionth-queue/workflows/Node.js%208%2010%2012%20/badge.svg?branch=master)](https://github.com/sovpro/gazillionth-queue/commits/master)
+[![Build status for Node.js 8.x and newer](https://github.com/sovpro/gazillionth-queue/workflows/Node.js%208.x%20and%20newer%20/badge.svg?branch=master)](https://github.com/sovpro/gazillionth-queue/commits/master)
 
 ## Constructor
 
