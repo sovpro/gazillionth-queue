@@ -13,6 +13,7 @@ const taskify_sym      = Symbol ()
 const run_sym          = Symbol ()
 const start_sym        = Symbol ()
 const set_timer_sym    = Symbol ()
+const reset_timer_sym  = Symbol ()
 const end_sym          = Symbol ()
 const wait_sym         = Symbol ()
 
@@ -63,19 +64,26 @@ class GazillionthQueue extends EventEmitter {
         this.length > 0 ||
         this.active > 0) return false
 
-    clearTimeout (this[timer_sym])
+    this[reset_timer_sym] ()
     this[started_sym] = false
     this.emit ('done')
     return true
   }
 
+  [reset_timer_sym] () {
+    clearTimeout (this[timer_sym])
+    this[timer_sym] = null
+  }
+
   [run_sym] () {
+    this[reset_timer_sym] ()
     if (this[end_sym]()) return
     this[activate_sym] ()
     this[set_timer_sym] ()
   }
 
   [set_timer_sym] () {
+    if (this[timer_sym]) return
     this[timer_sym] = setTimeout (this[run_sym], this.active_wait)
   }
 
