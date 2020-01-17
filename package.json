@@ -1,6 +1,6 @@
 {
   "name": "@sovpro/gazillionth-queue",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "One in gazillions of task queue implementations",
   "main": "gazillionth-queue.js",
   "scripts": {

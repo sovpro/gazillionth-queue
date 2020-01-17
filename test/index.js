@@ -4,6 +4,7 @@ const {GazillionthQueue} = require ('./../')
 testBasics (2)
   .then (() => testBasics (1))
   .then (() => testSingle (1))
+  .then (() => testClear ())
   .then (() => testConcurrency ())
   .then (() => console.log ('Done'))
 
@@ -37,6 +38,92 @@ function testConcurrency () {
   })
 
   return concurrencyTask
+}
+
+function testClear () {
+  console.log ('Test clearing queue')
+
+  const queue = new GazillionthQueue ({concurrency: 0})
+
+  const clearTask = new Promise ((fulfill) => {
+    let tasks_call_count = 0
+    let num_tasks_to_create = 10
+    let clear_call_count = 0
+    let clear_after_count = 4
+
+    queue.once ('done', () => {
+      assert (
+          clear_call_count > 0
+        , "The queue should emit 'cleared' before 'done' when clear is called"
+      )
+      assert (
+          clear_call_count === 1
+        , "The queue should emit 'cleared' only when the queue has callbacks"
+      )
+      assert (
+          tasks_call_count === (clear_after_count + 1)
+        , 'The queue should run only the callbacks activated before clearing'
+      )
+
+      const RESUME_ASSERT_MSG = 'New items added after clearing should resume the queue'
+      let new_tasks_run = 0
+      let resume_timeout = setTimeout (() => {
+        throw new Error (RESUME_ASSERT_MSG)
+      }, 300)
+
+      queue.once ('done', () => {
+        clearTimeout (resume_timeout)
+        assert (
+            new_tasks_run === 1
+          , RESUME_ASSERT_MSG
+        )
+        fulfill ()
+      })
+
+      queue.push (done => {
+        new_tasks_run++
+        done ()
+      })
+    })
+
+    const assertClearedTasks = given_count => {
+      assert (
+          given_count === (
+            num_tasks_to_create - clear_after_count - 1
+          )
+        , "The number of items reported in the 'cleared' event should " +
+          "equal the number of task functions that were not called"
+      )
+    }
+
+    queue.on ('cleared', num_tasks_cleared => {
+      assertClearedTasks (num_tasks_cleared)
+      clear_call_count += 1
+    })
+
+    const trackTaskCallCount = done => {
+      if (++tasks_call_count > clear_after_count) {
+        assertClearedTasks (queue.clear ())
+        assert (
+            queue.clear () === 0
+          , "The number of items reported in a 'cleared' event should " +
+            "be 0 when the queue is empty"
+        )
+      }
+      done ()
+    }
+
+    for (let i = 0; i < num_tasks_to_create; i++) {
+      queue.push ((done) => {
+        trackTaskCallCount (done)
+      })
+    }
+
+    queue.concurrency += 1
+
+  })
+
+  return clearTask
 }
 
 function testSingle (concurrency) {

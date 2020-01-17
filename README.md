@@ -48,6 +48,14 @@ queue.unshift ((done) => {
 })
 ```
 
+## Clear the queue
+
+Clear the queue and return the number of functions cleared. The [cleared](#cleared) event will be emitted if there were functions in the queue.
+
+```js
+let num_cleared = queue.clear ()
+```
+
 ## Properties
 
 - [concurrency](#concurrency)
@@ -87,12 +95,17 @@ A *read-only* count of dequeued functions that have been invoked and that have n
 ## Events
 
 - [activated](#activated)
+- [cleared](#cleared)
 - [done](#done)
 - [error](#error)
 
 ### activated
 
 Emitted with an integer representing the count of functions that are dequeued to be invoked, each time functions are dequeued.
+
+### cleared
+
+Emitted with an integer representing the count of uncalled functions that were remaining in the queue before [clear](#clear-the-queue) was called.
 
 ### done
 

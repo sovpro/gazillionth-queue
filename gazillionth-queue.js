@@ -76,8 +76,8 @@ class GazillionthQueue extends EventEmitter {
   }
 
   [run_sym] () {
-    this[reset_timer_sym] ()
     if (this[end_sym]()) return
+    this[reset_timer_sym] ()
     this[activate_sym] ()
     this[set_timer_sym] ()
   }
@@ -119,6 +119,15 @@ class GazillionthQueue extends EventEmitter {
 
   get started () {
     return this[started_sym]
+  }
+
+  clear () {
+    if (this.length === 0) return 0
+    const num_cleared = this.length
+    this[tasks_sym].length = 0
+    this.emit ('cleared', num_cleared)
+    this[end_sym] ()
+    return num_cleared
   }
 
   push (fn) {
