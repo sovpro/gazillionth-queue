@@ -36,7 +36,7 @@ export class GazillionthQueue extends EventEmitter {
   private _active: number
   private _started: boolean
   private _timer: NodeJS.Timeout
-  private _tasks: Function[]
+  private _tasks: TaskFunction[]
   private _wait: number
 
   constructor ({
@@ -132,17 +132,17 @@ export class GazillionthQueue extends EventEmitter {
     return num_cleared
   }
 
-  push (fn: Function) {
+  push (fn: TaskFunction) {
     this._tasks.push (fn)
     this._start ()
   }
 
-  unshift (fn: Function) {
+  unshift (fn: TaskFunction) {
     this._tasks.unshift (fn)
     this._start ()
   }
 
-  _taskify (fn: Function): TaskFunction {
+  _taskify (fn: TaskFunction): Function {
     // bind named function for string
     // output as "[Function: bound queueTask]"
     return queueTask.bind (this, fn)
