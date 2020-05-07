@@ -9,7 +9,7 @@ interface QueueConfig {
   active_wait?: number
 }
 
-type TaskDoneCallback = (tracker: TaskDoneCallbackTracker) => void;
+type TaskDoneCallback = () => void;
 type TaskFunction = (done: TaskDoneCallback) => void;
 
 function queueTaskCallback (tracker: TaskDoneCallbackTracker) {
